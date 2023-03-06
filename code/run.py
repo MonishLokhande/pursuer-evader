@@ -3,52 +3,43 @@ import random
 import math
 import time
 
-# initialize PyGame
+from agents import agent as ag
+from functions import functions as fn
+
+# Pygame
 pygame.init()
 
-# set up the screen
+# Screen
 screen_width = 900
 screen_height = 700
 screen = pygame.display.set_mode((screen_width, screen_height))
 
-# set up colors
+# Colors
 white = (255, 255, 255)
 black = (0, 0, 0)
 red = (255, 0, 0)
 blue = (0, 0, 255)
 
-# set up the pursuers
+# Define the Pursuers
 pursuers = []
 for i in range(3):
     x = random.randint(0, screen_width)
     y = random.randint(0, screen_height)
-    pursuer = {
-        'rect': pygame.Rect(x, y, 20, 20),
-        'velocity': [0, 0],
-        'color': blue
-    }
+    pursuer = ag.agent([x,y],[0,0],blue)
     pursuers.append(pursuer)
 
-# set up the evader
-evader = {
-    'rect': pygame.Rect(screen_width/2, screen_height/2, 20, 20),
-    'velocity': [0, 0],
-    'color': red
-}
+# Define the Evader
+evader = ag.agent([screen_width/2,screen_height/2],[0,0],red)
 
-# set up the clock
+# Clock
 clock = pygame.time.Clock()
 
-# Define distance between two entities
-def distance(a,b):
-    return math.sqrt((a['rect'].centerx - b['rect'].centerx)**2 + (a['rect'].centery - b['rect'].centery)**2)
-
-# define the main game loop
+# Game Loop
 def game_loop():
-    # main game loop
+    # Continuously run the loop till evader caught by pursuers
     running = True
     while running:
-        # handle events
+        # If the game is asked to quit
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -58,30 +49,31 @@ def game_loop():
         evader['velocity'][1] = random.randint(-5, 5)
         evader['rect'].move_ip(evader['velocity'])
         
-        # move the pursuers towards the evader
+        # Move Purser towards Evader (Main Logic of the Game)
         for pursuer in pursuers:
-            d = distance(pursuer, evader)
+            d = fn.distance(pursuer, evader)
             if d > 0:
                 pursuer['velocity'][0] = 5 * (evader['rect'].centerx - pursuer['rect'].centerx) / d
                 pursuer['velocity'][1] = 5 * (evader['rect'].centery - pursuer['rect'].centery) / d
             pursuer['rect'].move_ip(pursuer['velocity'])
         
-        # draw the screen
+        # Display the game
         screen.fill(white)
         pygame.draw.rect(screen, evader['color'], evader['rect'])
         for pursuer in pursuers:
             pygame.draw.rect(screen, pursuer['color'], pursuer['rect'])
         pygame.display.flip()
         
-        # limit the frame rate
+        # Frame Rate
         clock.tick(10)
 
-        if (distance(pursuers[0],evader))*(distance(pursuers[1],evader))*(distance(pursuers[2],evader)) == 0:
+        # If the evader is caught by any of the pursuers, stop the game
+        if (fn.distance(pursuers[0],evader))*(fn.distance(pursuers[1],evader))*(fn.distance(pursuers[2],evader)) == 0:
             time.sleep(5)
             running = False
 
-    # clean up PyGame
+    # Quit the game
     pygame.quit()
 
-# run the game loop
+# Run the Game
 game_loop()
