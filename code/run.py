@@ -7,8 +7,8 @@ import time
 pygame.init()
 
 # set up the screen
-screen_width = 600
-screen_height = 600
+screen_width = 900
+screen_height = 700
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 # set up colors
