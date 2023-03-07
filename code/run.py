@@ -1,10 +1,10 @@
 import pygame
 import random
-import math
 import time
 
 from agents import agent as ag
 from functions import functions as fn
+from functions import pursuer_logic as pl
 
 # Pygame
 pygame.init()
@@ -38,6 +38,8 @@ clock = pygame.time.Clock()
 def game_loop():
     # Continuously run the loop till evader caught by pursuers
     running = True
+
+    # Every Instance of the Game
     while running:
         # If the game is asked to quit
         for event in pygame.event.get():
@@ -50,11 +52,8 @@ def game_loop():
         evader['rect'].move_ip(evader['velocity'])
         
         # Move Purser towards Evader (Main Logic of the Game)
+        pl.pursuer_logic(pursuers, evader)
         for pursuer in pursuers:
-            d = fn.distance(pursuer, evader)
-            if d > 0:
-                pursuer['velocity'][0] = 5 * (evader['rect'].centerx - pursuer['rect'].centerx) / d
-                pursuer['velocity'][1] = 5 * (evader['rect'].centery - pursuer['rect'].centery) / d
             pursuer['rect'].move_ip(pursuer['velocity'])
         
         # Display the game
