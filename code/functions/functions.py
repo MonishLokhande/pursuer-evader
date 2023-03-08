@@ -20,5 +20,5 @@ def pursuer_angle(pursuers):
     pursuer_angle = np.zeros((length,length))
     for i in range(len(pursuers)):
         for j in range(len(pursuers)):
-            pursuer_angle[i][j] = math.atan2(pursuers[i]['rect'].centery - pursuers[j]['rect'].centery, pursuers[i]['rect'].centerx - pursuers[j]['rect'].centerx)
+            pursuer_angle[i][j] = np.rad2deg(math.atan2(pursuers[i]['rect'].centery - pursuers[j]['rect'].centery, pursuers[i]['rect'].centerx - pursuers[j]['rect'].centerx))
     return pursuer_angle
